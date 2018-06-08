@@ -539,7 +539,7 @@ function OnNetworkBindingChanged(idBinding, bIsBound)
 	OnNetworkConnectionChanged(idBinding, bIsBound)
 	if (bIsBound) then
 		-- Start a special instance of reconnect timer to eventually do NetConnect if not done automatically
-		gCon._NetworkReconnectTimer:StartTimer(gNetworkReconnectInterval) 	
+--		gCon._NetworkReconnectTimer:StartTimer(gNetworkReconnectInterval) 	
 	end	
 end
 
@@ -589,7 +589,7 @@ function SetControlMethod()
 	if (gCon ~= nil) then
 		if (gIsNetworkConnected == false) and (gCon._NetworkReconnectTimer ~= nil) then
 			--housekeeping when changing from network control to serial or IR control
-			gCon._NetworkReconnectTimer:KillTimer() 
+--			gCon._NetworkReconnectTimer:KillTimer() 
 		end
 	end
 
@@ -951,9 +951,9 @@ end
 function NetworkConnectionBase:CheckNetworkConnectionStatus()
 	if (self._IsConnected and (not self._IsOnline)) then
 		LogWarn("Network status is OFFLINE. Trying to reconnect to the device's Control port...")
-		C4:NetDisconnect(self._BindingID, self._Port)
+--		C4:NetDisconnect(self._BindingID, self._Port)
 		--C4:NetConnect(self._BindingID, self._Port)
-		self._NetworkReconnectTimer:StartTimer(gNetworkReconnectInterval)
+--		self._NetworkReconnectTimer:StartTimer(gNetworkReconnectInterval)
 	end
 end
 
@@ -991,8 +991,8 @@ function NetworkConnectionBase:SetOnlineStatus(IsOnline)
 	self._IsOnline = IsOnline
 
 	if(IsOnline) then
-		self._KeepAliveTimer:StartTimer(gNetworkKeepAliveInterval)
-		self._NetworkReconnectTimer:KillTimer()
+--		self._KeepAliveTimer:StartTimer(gNetworkKeepAliveInterval)
+--		self._NetworkReconnectTimer:KillTimer()
 		self._LastCheckin = 0
 		if (UpdateProperty ~= nil and type(UpdateProperty) == "function") then
 			UpdateProperty("Connected To Network", "true")
@@ -1000,8 +1000,8 @@ function NetworkConnectionBase:SetOnlineStatus(IsOnline)
 
 		self:SendNextCommand()
 	else
-		self._KeepAliveTimer:KillTimer()
-		self._NetworkReconnectTimer:StartTimer(gNetworkReconnectInterval)
+--		self._KeepAliveTimer:KillTimer()
+--		self._NetworkReconnectTimer:StartTimer(gNetworkReconnectInterval)
 		if (UpdateProperty ~= nil and type(UpdateProperty) == "function") then
 			UpdateProperty("Connected To Network", "false")
 		end
@@ -3599,7 +3599,12 @@ end
     None
 ===============================================================================]]
 function OnNetworkConnectionChanged(idBinding, bIsBound)
-	
+	LogTrace("OnNetworkConnectionChanged")
+	if(bIsBound == true) then
+	   C4:NetConnect(idBinding, 60000, "UDP")
+     else
+	   C4:NetDisconnect(idBinding, 60000)
+	end
 end
 
 --[[=============================================================================
@@ -3618,7 +3623,9 @@ end
     None
 ===============================================================================]]
 function OnNetworkStatusChanged(idBinding, nPort, sStatus)
-	
+     if(sStatus == "ONLINE") then
+	   C4:SendToNetwork(idBinding, nPort, "UU")
+	end
 end
 
 --[[=============================================================================
@@ -4147,7 +4154,7 @@ end
 
 function ON_DRIVER_LATEINIT.proxy_init()
      StartTimer(gIpProxy._Timer)
-	StartTimer(gIpProxy._KeepTimer)
+--	StartTimer(gIpProxy._KeepTimer)
 end
 
 function IP_DEVICES_ADDR.init()
@@ -4266,14 +4273,19 @@ function IpProxy:Initialize()
 	self._MsgPos = 1
 	self._MsgSendPos = 1
 	self._MsgTableMax = 5000
-	self._Timer = CreateTimer("SEND_DATA", 100, "MILLISECONDS", TimerCallback, true, nil)
-	self._KeepTimer = CreateTimer("SEND_KEEPALIVE", 10, "SECONDS", KeepTimerCallback, true, nil)
+	self._Timer = CreateTimer("SEND_DATA", 50, "MILLISECONDS", TimerCallback, true, nil)
+	self._KeepTimer = CreateTimer("SEND_KEEPALIVE", 5, "SECONDS", KeepTimerCallback, true, nil)
 end
 function KeepTimerCallback()
      if(gCon._IsConnected) then
 	    if(gCon._IsOnline) then
 		   local str = string.pack("bb",0x55,0x55)
-		   gCon:SendCommand(str,1,"SECONDS","KEEPALIVE")
+		   gIpProxy._MsgTable[gIpProxy._MsgPos] = str
+		   if(gIpProxy._MsgPos == gIpProxy._MsgTableMax) then
+			  gIpProxy._MsgPos = 1
+		   else
+			  gIpProxy._MsgPos = gIpProxy._MsgPos + 1
+		   end
 	    end
      end
 end

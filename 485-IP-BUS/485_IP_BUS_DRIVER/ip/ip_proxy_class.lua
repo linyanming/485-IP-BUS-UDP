@@ -25,14 +25,19 @@ function IpProxy:Initialize()
 	self._MsgPos = 1
 	self._MsgSendPos = 1
 	self._MsgTableMax = 5000
-	self._Timer = CreateTimer("SEND_DATA", 100, "MILLISECONDS", TimerCallback, true, nil)
-	self._KeepTimer = CreateTimer("SEND_KEEPALIVE", 10, "SECONDS", KeepTimerCallback, true, nil)
+	self._Timer = CreateTimer("SEND_DATA", 50, "MILLISECONDS", TimerCallback, true, nil)
+	self._KeepTimer = CreateTimer("SEND_KEEPALIVE", 5, "SECONDS", KeepTimerCallback, true, nil)
 end
 function KeepTimerCallback()
      if(gCon._IsConnected) then
 	    if(gCon._IsOnline) then
 		   local str = string.pack("bb",0x55,0x55)
-		   gCon:SendCommand(str,1,"SECONDS","KEEPALIVE")
+		   gIpProxy._MsgTable[gIpProxy._MsgPos] = str
+		   if(gIpProxy._MsgPos == gIpProxy._MsgTableMax) then
+			  gIpProxy._MsgPos = 1
+		   else
+			  gIpProxy._MsgPos = gIpProxy._MsgPos + 1
+		   end
 	    end
      end
 end

@@ -33,7 +33,7 @@ end
 
 function ON_DRIVER_LATEINIT.proxy_init()
      StartTimer(gIpProxy._Timer)
-	StartTimer(gIpProxy._KeepTimer)
+--	StartTimer(gIpProxy._KeepTimer)
 end
 
 function IP_DEVICES_ADDR.init()

@@ -8,11 +8,11 @@
   <name>485 IP BUS</name>
   <model>485 IP BUS</model>
   <created>05/19/2018 8:30 AM</created>
-  <modified>06/02/2018 2:31 PM</modified>
+  <modified>06/06/2018 5:00 PM</modified>
   <!-- 
 	Each time you modify the driver update the version number below.
 	-->
-  <version>59</version>
+  <version>61</version>
   <capabilities>
     <!-- 
 		These are the modes the camera might support.  If the camera does not support H264 then remove the H264 entries
@@ -74,11 +74,12 @@
       <videosource>false</videosource>
       <connectionname>UDP</connectionname>
       <facing>6</facing>
-      <consumer>false</consumer>
-      <linelevel>false</linelevel>
+      <consumer>true</consumer>
+      <linelevel>true</linelevel>
       <classes>
         <class>
           <classname>UDP</classname>
+          <autobind>true</autobind>
           <ports>
             <port>
               <number>60000</number>

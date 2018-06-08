@@ -461,7 +461,7 @@ function OnNetworkBindingChanged(idBinding, bIsBound)
 	OnNetworkConnectionChanged(idBinding, bIsBound)
 	if (bIsBound) then
 		-- Start a special instance of reconnect timer to eventually do NetConnect if not done automatically
-		gCon._NetworkReconnectTimer:StartTimer(gNetworkReconnectInterval) 	
+--		gCon._NetworkReconnectTimer:StartTimer(gNetworkReconnectInterval) 	
 	end	
 end
 
@@ -511,7 +511,7 @@ function SetControlMethod()
 	if (gCon ~= nil) then
 		if (gIsNetworkConnected == false) and (gCon._NetworkReconnectTimer ~= nil) then
 			--housekeeping when changing from network control to serial or IR control
-			gCon._NetworkReconnectTimer:KillTimer() 
+--			gCon._NetworkReconnectTimer:KillTimer() 
 		end
 	end
 

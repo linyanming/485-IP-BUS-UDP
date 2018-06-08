@@ -101,7 +101,12 @@ end
     None
 ===============================================================================]]
 function OnNetworkConnectionChanged(idBinding, bIsBound)
-	
+	LogTrace("OnNetworkConnectionChanged")
+	if(bIsBound == true) then
+	   C4:NetConnect(idBinding, 60000, "UDP")
+     else
+	   C4:NetDisconnect(idBinding, 60000)
+	end
 end
 
 --[[=============================================================================
@@ -120,7 +125,9 @@ end
     None
 ===============================================================================]]
 function OnNetworkStatusChanged(idBinding, nPort, sStatus)
-	
+     if(sStatus == "ONLINE") then
+	   C4:SendToNetwork(idBinding, nPort, "UU")
+	end
 end
 
 --[[=============================================================================

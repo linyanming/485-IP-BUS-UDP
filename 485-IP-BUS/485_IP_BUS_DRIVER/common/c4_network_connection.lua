@@ -66,9 +66,9 @@ end
 function NetworkConnectionBase:CheckNetworkConnectionStatus()
 	if (self._IsConnected and (not self._IsOnline)) then
 		LogWarn("Network status is OFFLINE. Trying to reconnect to the device's Control port...")
-		C4:NetDisconnect(self._BindingID, self._Port)
+--		C4:NetDisconnect(self._BindingID, self._Port)
 		--C4:NetConnect(self._BindingID, self._Port)
-		self._NetworkReconnectTimer:StartTimer(gNetworkReconnectInterval)
+--		self._NetworkReconnectTimer:StartTimer(gNetworkReconnectInterval)
 	end
 end
 
@@ -106,8 +106,8 @@ function NetworkConnectionBase:SetOnlineStatus(IsOnline)
 	self._IsOnline = IsOnline
 
 	if(IsOnline) then
-		self._KeepAliveTimer:StartTimer(gNetworkKeepAliveInterval)
-		self._NetworkReconnectTimer:KillTimer()
+--		self._KeepAliveTimer:StartTimer(gNetworkKeepAliveInterval)
+--		self._NetworkReconnectTimer:KillTimer()
 		self._LastCheckin = 0
 		if (UpdateProperty ~= nil and type(UpdateProperty) == "function") then
 			UpdateProperty("Connected To Network", "true")
@@ -115,8 +115,8 @@ function NetworkConnectionBase:SetOnlineStatus(IsOnline)
 
 		self:SendNextCommand()
 	else
-		self._KeepAliveTimer:KillTimer()
-		self._NetworkReconnectTimer:StartTimer(gNetworkReconnectInterval)
+--		self._KeepAliveTimer:KillTimer()
+--		self._NetworkReconnectTimer:StartTimer(gNetworkReconnectInterval)
 		if (UpdateProperty ~= nil and type(UpdateProperty) == "function") then
 			UpdateProperty("Connected To Network", "false")
 		end
