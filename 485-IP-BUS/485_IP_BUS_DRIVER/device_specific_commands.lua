@@ -22,7 +22,17 @@ function EX_CMD.SENDCMD(tParams)
 	LogTrace("EX_CMD.SENDCMD")
 	LogTrace(tParams)
 	local msg = tParams["COMMAND"]
-	local tmp_msg = ""
+	if(msg ~= nil and msg ~= "") then
+	   local tmp_msg = tohex(msg)
+	   hexdump(tmp_msg)
+	   gIpProxy._MsgTable[gIpProxy._MsgPos] = tmp_msg
+	   if(gIpProxy._MsgPos == gIpProxy._MsgTableMax) then
+		  gIpProxy._MsgPos = 1
+	   else
+		  gIpProxy._MsgPos = gIpProxy._MsgPos + 1
+	   end
+	end
+--[[
 	if(msg ~= nil and msg ~= "") then
 	    local msglen = #msg/2
 	    local message = string.lower(msg)
@@ -53,7 +63,7 @@ function EX_CMD.SENDCMD(tParams)
 	 --   end
 	  --  gCon:SendCommand(tmp_msg,1,"SECONDS","LED_CONTROL")
 	end
-
+]]
 	
 end
 
