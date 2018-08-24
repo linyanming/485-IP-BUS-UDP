@@ -1,4 +1,4 @@
-﻿<Driver type="c4z" name="485_ip_UDP" squishLua="true" manualsquish="true">
+﻿<Driver type="c4z" name="General_Ip_485_Gateway" squishLua="true" manualsquish="true">
  <Items>
   <Item type="dir" c4zDir="common" name="common" recurse="true" exclude="false" />
   <Item type="dir" c4zDir="icons" name="icons" recurse="true" exclude="false" />
